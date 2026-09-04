@@ -1,0 +1,31 @@
+server:
+  port: ${PORT_SERVICE_CONFIG}
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: ${CONFIG_SERVER_GIT_URI}
+          clone-on-start: true
+          refresh-rate: 10
+          default-label: ${CONFIG_SERVER_GIT_BRANCH}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL}
+
+logging:
+  level:
+    root: INFO
+    com.irojas.microservices: WARN
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  file:
+    name: logs/config-server.log

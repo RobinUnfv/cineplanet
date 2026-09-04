@@ -1,0 +1,20 @@
+server:
+  port: ${PORT_DISCOVERY_SERVER}
+
+spring:
+  application:
+    name: discovery-server
+  config:
+    activate:
+      on-profile: server01
+
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+  datacenter: Robinzon
+  environment: Development
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+    lease-expiration-duration-in-seconds: 10

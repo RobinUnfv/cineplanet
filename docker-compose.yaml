@@ -1,0 +1,50 @@
+services:
+  discovery-server:
+    build:
+      context: .
+      dockerfile: ./discovery-server/Dockerfile
+    container_name: discovery-server
+    ports:
+      - "${DISCOVERY_SERVICE_PORT}:8761"
+    environment:
+      - PORT_DISCOVERY_SERVER=${DISCOVERY_SERVICE_PORT}
+    networks:
+      - erp-vpc
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://discovery-server:${DISCOVERY_SERVICE_PORT}/actuator/health" ]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+    restart: on-failure
+
+  config-server:
+    build:
+      context: .
+      dockerfile: ./config-server/Dockerfile
+    container_name: config-server
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+    ports:
+      - "${CONFI_SERVER_PORT}:9000"
+    environment:
+      - PORT_SERVICE_CONFIG=${CONFI_SERVER_PORT}
+      - CONFIG_SERVER_GIT_URI=${CONFI_SERVER_GIT_URI}
+      - CONFIG_SERVER_GIT_BRANCH=${CONFI_SERVER_GIT_BRANCH}
+      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
+    networks:
+      - erp-vpc
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://config-server:${CONFI_SERVER_PORT}/actuator/health" ]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+    restart: on-failure
+
+networks:
+  erp-vpc:
+    driver: bridge
+
+volumes:
+  mysql-keycloak-data:
+    driver: local
