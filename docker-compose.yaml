@@ -41,10 +41,34 @@ services:
       retries: 5
     restart: on-failure
 
+  # MYSQL - CLIENTE
+  dbCustomer:
+    image: mysql:8.0
+    container_name: dbCustomer
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_CUSTOMER_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_CUSTOMER_DB}
+      MYSQL_USER: ${MYSQL_CUSTOMER_USER}
+      MYSQL_PASSWORD: ${MYSQL_CUSTOMER_PASSWORD}
+    ports:
+      - "${MYSQL_CUSTOMER_PORT}:3306"
+    volumes:
+      - ./docker-files/db/mysql-cliente:/docker-entrypoint-initdb.d
+      - mysql-cliente-data:/var/lib/mysql
+    networks:
+      - erp-vpc
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_CUSTOMER_USER}", "-p${MYSQL_CUSTOMER_PASSWORD}", "--silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: on-failure
+
 networks:
   erp-vpc:
     driver: bridge
 
 volumes:
-  mysql-keycloak-data:
+  mysql-cliente-data:
     driver: local
