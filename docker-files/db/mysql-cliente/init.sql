@@ -36,5 +36,5 @@ INSERT INTO Cliente (id, nombre, paterno, materno, correo, telefono, fechaIngres
 (UUID(), 'Patricia', 'Garcia', 'Lopez', 'patricia.garcia@email.com', '987654336', NOW()),
 (UUID(), 'Jose', 'Sanchez', 'Gonzalez', 'jose.sanchez@email.com', '987654337', NOW()),
 (UUID(), 'Marta', 'Diaz', 'Rodriguez', 'marta.diaz@email.com', '987654338', NOW()),
-(UUID(), 'Francisco', 'Perez', 'Martinez', 'francisco.perez@email.com', '987654339', NOW()),,
+(UUID(), 'Francisco', 'Perez', 'Martinez', 'francisco.perez@email.com', '987654339', NOW()),
 (UUID(), 'Rosa', 'Lopez', 'Fernandez', 'rosa.lopez@email.com', '987654340', NOW());

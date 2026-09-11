@@ -43,7 +43,7 @@ services:
 
   # MYSQL - CLIENTE
   dbCustomer:
-    image: mysql:8.0
+    image: mysql
     container_name: dbCustomer
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_CUSTOMER_ROOT_PASSWORD}
