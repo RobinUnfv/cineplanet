@@ -91,10 +91,29 @@ services:
     networks:
       - erp-vpc
 
+  # BASE DE DATOS MONGODB
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "${PORT_MONGODB}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongo_data:/data/db
+      - ./docker-files/db/mongo-init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - erp-vpc
+
 networks:
   erp-vpc:
     driver: bridge
 
 volumes:
   mysql-cliente-data:
+    driver: local
+  mongo_data:
     driver: local

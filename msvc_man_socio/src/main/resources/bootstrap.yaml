@@ -1,6 +1,6 @@
 spring:
   application:
-    name: msvc-cliente
+    name: msvc-man-socio
   cloud:
     config:
       uri: ${CONFIG_SERVER_CONF_URI}
@@ -15,4 +15,4 @@ logging:
     console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
     file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
   file:
-    name: logs/msvc-cliente.log
+    name: logs/msvc-man-socio.log
