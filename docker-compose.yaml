@@ -65,6 +65,32 @@ services:
       start_period: 30s
     restart: on-failure
 
+  # SERVICIO DE CLIENTE
+  msvc-cliente:
+    build:
+      context: .
+      dockerfile: ./msvc-cliente/Dockerfile
+    container_name: msvc-cliente
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      dbCustomer:
+        condition: service_started
+    ports:
+      - "${MSVC_CLIENTE_PORT}:8091"
+    environment:
+      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
+      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
+      - PORT_SERVICE_CLIENTE=${MSVC_CLIENTE_PORT}
+      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
+      - BD_MYSQL_URL=jdbc:mysql://dbCustomer:${MYSQL_CUSTOMER_PORT}/${MYSQL_CUSTOMER_DB}
+      - BD_MYSQL_USERNAME=${MYSQL_CUSTOMER_ROOT_USER}
+      - BD_MYSQL_PASSWORD=${MYSQL_CUSTOMER_ROOT_PASSWORD}
+    networks:
+      - erp-vpc
+
 networks:
   erp-vpc:
     driver: bridge

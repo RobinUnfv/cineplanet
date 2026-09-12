@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 
 import java.time.LocalDateTime;
@@ -20,14 +22,15 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Cliente", uniqueConstraints = {
+@Table(name = "cliente", uniqueConstraints = {
         @UniqueConstraint(columnNames = "correo")
 })
 public class Cliente {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", columnDefinition = "CHAR(36)")
+    @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
     @NotBlank(message = "El nombre es obligatorio")
@@ -57,14 +60,14 @@ public class Cliente {
     private String telefono;
 
     @CreationTimestamp
-    @Column(name = "fechaIngreso", nullable = false, updatable = false)
+    @Column(name = "fecha_ingreso", nullable = false, updatable = false)
     private LocalDateTime fechaIngreso;
 
-    @Builder.Default
     @Column(name = "activo", nullable = false)
-    private Boolean activo = true;
+    private Boolean activo;
 
     public String getNombreCompleto() {
-        return this.nombre + " " + this.paterno + " " + this.materno;
+        return this.id + " " +this.nombre + " " + this.paterno + " " + this.materno;
     }
+
 }

@@ -3,26 +3,26 @@ CREATE DATABASE IF NOT EXISTS bdCustomer;
 USE bdCustomer;
 
 -- Crear la tabla Cliente
-CREATE TABLE IF NOT EXISTS Cliente (
+CREATE TABLE IF NOT EXISTS cliente (
     id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     nombre VARCHAR(50) NOT NULL,
     paterno VARCHAR(30) NOT NULL,
     materno VARCHAR(30) NOT NULL,
     correo VARCHAR(80) NOT NULL UNIQUE,
     telefono VARCHAR(9) NOT NULL,
-    fechaIngreso DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_ingreso DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     activo BOOLEAN DEFAULT TRUE,
     INDEX idx_correo (correo),
     INDEX idx_telefono (telefono)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insertar 20 clientes de ejemplo
-INSERT INTO Cliente (id, nombre, paterno, materno, correo, telefono, fechaIngreso) VALUES
+INSERT INTO cliente (id, nombre, paterno, materno, correo, telefono, fecha_ingreso) VALUES
 (UUID(), 'Juan', 'Perez', 'Garcia', 'juan.perez@email.com', '987654321', NOW()),
 (UUID(), 'Maria', 'Lopez', 'Martinez', 'maria.lopez@email.com', '987654322', NOW()),
 (UUID(), 'Carlos', 'Gonzalez', 'Rodriguez', 'carlos.gonzalez@email.com', '987654323', NOW()),
 (UUID(), 'Ana', 'Fernandez', 'Sanchez', 'ana.fernandez@email.com', '987654324', NOW()),
-(UUID(), 'Luis', 'Martínez', 'Diaz', 'luis.martinez@email.com', '987654325', NOW()),
+(UUID(), 'Luis', 'Martinez', 'Diaz', 'luis.martinez@email.com', '987654325', NOW()),
 (UUID(), 'Elena', 'Garcia', 'Perez', 'elena.garcia@email.com', '987654326', NOW()),
 (UUID(), 'Miguel', 'Rodriguez', 'Lopez', 'miguel.rodriguez@email.com', '987654327', NOW()),
 (UUID(), 'Carmen', 'Sanchez', 'Gonzalez', 'carmen.sanchez@email.com', '987654328', NOW()),
