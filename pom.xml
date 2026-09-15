@@ -19,10 +19,7 @@
         <module>discovery-server</module>
         <module>config-server</module>
         <module>msvc-cliente</module>
-<!--        <module>msvc-compras</module>-->
-<!--        <module>cloud-gateway</module>-->
-<!--        &lt;!&ndash;	  <module>client-oauth2</module>&ndash;&gt;-->
-<!--        <module>client-keycloak</module>-->
+        <module>msvc_man_socio</module>
     </modules>
 
     <properties>

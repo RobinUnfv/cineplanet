@@ -1,4 +1,0 @@
-application:
-  title: @project.artifactId@
-  version: @project.version@
-  author: Robinzon Santana

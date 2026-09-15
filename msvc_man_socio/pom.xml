@@ -10,8 +10,6 @@
 	</parent>
 	<groupId>com.robin</groupId>
 	<artifactId>msvc_man_socio</artifactId>
-	<name>msvc_man_socio</name>
-	<description>Microservicio para el mantenimiento de socios</description>
 
 	<dependencies>
 		<dependency>
