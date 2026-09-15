@@ -1,6 +1,8 @@
 package com.robin.msvc_man_socio.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.robin.msvc_man_socio.entity.Estado;
+import com.robin.msvc_man_socio.entity.Membresia;
 import jakarta.validation.constraints.*;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -32,8 +34,8 @@ public record SocioRequest(
         String telefono,
 
         @NotNull(message = "El estado del socio es obligatorio")
-        String stsSocio,
+        Estado stsSocio,
 
         @NotNull(message = "El tipo de membresía es obligatorio")
-        String tipoMembresia
+        Membresia tipoMembresia
         ) { }
