@@ -43,5 +43,21 @@ public class SocioMapper {
         );
     }
 
+    public void updateSocio(Socio socio, SocioRequest socioRequest) {
+        if (socio == null || socioRequest == null) {
+            return;
+        }
+
+        socio.setDni(socioRequest.dni());
+        socio.setNombre(socioRequest.nombre());
+        socio.setPaterno(socioRequest.paterno());
+        socio.setMaterno(socioRequest.materno());
+        socio.setCorreo(socioRequest.correo());
+        socio.setTelefono(socioRequest.telefono());
+        socio.setStsSocio(socioRequest.stsSocio());
+        socio.setTipoMembresia(socioRequest.tipoMembresia());
+
+    }
+
 
 }
