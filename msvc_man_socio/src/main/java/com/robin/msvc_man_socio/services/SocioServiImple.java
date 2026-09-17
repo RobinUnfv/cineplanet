@@ -8,6 +8,7 @@ import com.robin.msvc_man_socio.exception.SocioNotFoundException;
 import com.robin.msvc_man_socio.mapper.SocioMapper;
 import com.robin.msvc_man_socio.repository.ISocioRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,18 +22,22 @@ public class SocioServiImple implements ISocioServi{
     private final ISocioRepo socioRepo;
     private final SocioMapper socioMapper;
 
+    @Value("${server.port}")
+    private int port;
+
     @Override
     public List<SocioResponse> listarSocios() {
         return this.socioRepo.findAll()
                 .stream()
-                .map(this.socioMapper:: toResponse)
+                .map(socio -> this.socioMapper.toResponse(socio, port))
                 .collect(Collectors.toList());
     }
 
     @Override
     public SocioResponse obtenerSocioPorDni(String dni) {
 
-        return this.socioRepo.findByDni(dni).map(this.socioMapper::toResponse)
+        return this.socioRepo.findByDni(dni)
+                .map(socio -> this.socioMapper.toResponse(socio, port))
                 .orElseThrow( () -> new SocioNotFoundException("El numero de DNI no encontrado : "+dni) );
 
     }
@@ -41,7 +46,7 @@ public class SocioServiImple implements ISocioServi{
     @Override
     public SocioResponse crearSocio(SocioRequest socioRequest) {
         var socio = this.socioRepo.save(this.socioMapper.toSocio(socioRequest));
-        return this.socioMapper.toResponse(socio);
+        return this.socioMapper.toResponse(socio, port);
     }
 
     @Transactional
@@ -52,7 +57,7 @@ public class SocioServiImple implements ISocioServi{
         validarDniOrEmailSocio(socioActual, socioRequest);
         this.socioMapper.updateSocio(socioActual, socioRequest);
         var socioActualizado = this.socioRepo.save(socioActual);
-        return this.socioMapper.toResponse(socioActualizado);
+        return this.socioMapper.toResponse(socioActualizado, port);
     }
 
     @Override

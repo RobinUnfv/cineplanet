@@ -26,7 +26,7 @@ public class SocioMapper {
                 .build();
     }
 
-    public SocioResponse toResponse(Socio socio) {
+    public SocioResponse toResponse(Socio socio, int port) {
         if (socio == null) {
             return null;
         }
@@ -39,7 +39,8 @@ public class SocioMapper {
                 socio.getCorreo(),
                 socio.getTelefono(),
                 socio.getStsSocio(),
-                socio.getTipoMembresia()
+                socio.getTipoMembresia(),
+                port
         );
     }
 

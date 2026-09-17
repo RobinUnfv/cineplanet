@@ -105,28 +105,85 @@ services:
       - ./docker-files/db/mongo-init:/docker-entrypoint-initdb.d:ro
     networks:
       - erp-vpc
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')",
+              "-u", "${MONGO_INITDB_ROOT_USERNAME}",
+              "-p", "${MONGO_INITDB_ROOT_PASSWORD}",
+              "--authenticationDatabase", "admin", "--quiet" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   # SERVICIO DE MANTENIMIENTO DE SOCIO
-  msvc-man-socio:
+  msvc_man_socio:
     build:
       context: .
-      dockerfile: ./msvc-man-socio/Dockerfile
-    container_name: msvc-man-socio
+      dockerfile: ./msvc_man_socio/Dockerfile
+    container_name: msvc_man_socio
     depends_on:
       discovery-server:
         condition: service_healthy
       config-server:
         condition: service_healthy
+      mongodb:
+        condition: service_healthy
     ports:
-      - "${MAN_SOCIO_PORT}:8092"
+      - "${MAN_SOCIO_PORT_1}:8092"
     environment:
       - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
       - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
-      - PORT_MAN_SOCIO=${MAN_SOCIO_PORT}
+      - PORT_MAN_SOCIO=${MAN_SOCIO_PORT_1}
       - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
       - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/${MONGO_INITDB_DATABASE}?authSource=admin
     networks:
       - erp-vpc
+
+#  msvc_man_socio_2:
+#    build:
+#      context: .
+#      dockerfile: ./msvc_man_socio/Dockerfile
+#    container_name: msvc_man_socio_2
+#    depends_on:
+#      discovery-server:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      mongodb:
+#        condition: service_healthy
+#    ports:
+#      - "${MAN_SOCIO_PORT_2}:8093"
+#    environment:
+#      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
+#      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
+#      - PORT_MAN_SOCIO=${MAN_SOCIO_PORT_2}
+#      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
+#      - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/${MONGO_INITDB_DATABASE}?authSource=admin
+#    networks:
+#      - erp-vpc
+#
+#  msvc_man_socio_3:
+#    build:
+#      context: .
+#      dockerfile: ./msvc_man_socio/Dockerfile
+#    container_name: msvc_man_socio_3
+#    depends_on:
+#      discovery-server:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      mongodb:
+#        condition: service_healthy
+#    ports:
+#      - "${MAN_SOCIO_PORT_3}:8094"
+#    environment:
+#      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
+#      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
+#      - PORT_MAN_SOCIO=${MAN_SOCIO_PORT_3}
+#      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
+#      - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/${MONGO_INITDB_DATABASE}?authSource=admin
+#    networks:
+#      - erp-vpc
 
 networks:
   erp-vpc:

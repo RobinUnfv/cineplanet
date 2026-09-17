@@ -11,6 +11,7 @@ public record SocioResponse(
         String correo,
         String telefono,
         Estado stsSocio,
-        Membresia tipoMembresia
+        Membresia tipoMembresia,
+        int port
 ) {
 }
