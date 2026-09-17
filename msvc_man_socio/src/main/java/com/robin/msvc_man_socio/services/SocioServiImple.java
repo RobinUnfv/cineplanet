@@ -8,6 +8,7 @@ import com.robin.msvc_man_socio.exception.SocioNotFoundException;
 import com.robin.msvc_man_socio.mapper.SocioMapper;
 import com.robin.msvc_man_socio.repository.ISocioRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SocioServiImple implements ISocioServi{
@@ -27,10 +29,12 @@ public class SocioServiImple implements ISocioServi{
 
     @Override
     public List<SocioResponse> listarSocios() {
+        log.info("[SocioServiImple] - listarSocios - puerto : {}", port);
+        log.info("[SocioServiImple] - listarSocios: - List<SocioResponse> {}", socioRepo.findAll());
         return this.socioRepo.findAll()
                 .stream()
                 .map(socio -> this.socioMapper.toResponse(socio, port))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

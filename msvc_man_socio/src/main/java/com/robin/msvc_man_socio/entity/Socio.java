@@ -12,8 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Document(collection = "socio")
 public class Socio {
 

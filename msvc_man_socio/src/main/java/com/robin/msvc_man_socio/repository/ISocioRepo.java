@@ -10,7 +10,5 @@ import java.util.Optional;
 public interface ISocioRepo extends MongoRepository<Socio, String> {
 
     Optional<Socio> findByDni(String dni);
-    boolean existsByDni(String dni);
-    boolean existsByCorreo(String correo);
-    void deleteByDni(String dni);
+
 }
