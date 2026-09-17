@@ -1,11 +1,17 @@
 spring:
   application:
-    name: msvc-man-socio
+    name: msvc_man_socio
   cloud:
     config:
-      uri: ${CONFIG_SERVER_CONF_URI}
-      profile: ${CONFIG_SERVER_PROFILE}
+      uri: ${CONFIG_SERVER_CONF_URI:http://localhost:9000}
+      profile: ${CONFIG_SERVER_PROFILE:dev}
       enabled: true
+  data:
+    mongodb:
+      uri: ${BD_MONGO_URL:mongodb://localhost:27017/erp_db}
+
+server:
+  port: ${PORT_MAN_SOCIO:8092}
 
 logging:
   level:
