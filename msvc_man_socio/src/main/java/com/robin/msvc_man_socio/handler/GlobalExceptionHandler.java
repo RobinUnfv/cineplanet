@@ -20,7 +20,7 @@ import java.util.Map;
 import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
-@RestControllerAdvice
+//@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
