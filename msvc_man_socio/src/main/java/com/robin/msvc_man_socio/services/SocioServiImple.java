@@ -4,6 +4,7 @@ import com.robin.msvc_man_socio.dto.SocioRequest;
 import com.robin.msvc_man_socio.dto.SocioResponse;
 import com.robin.msvc_man_socio.entity.Socio;
 import com.robin.msvc_man_socio.exception.BusinessException;
+import com.robin.msvc_man_socio.exception.SocioDuplicadoException;
 import com.robin.msvc_man_socio.exception.SocioNotFoundException;
 import com.robin.msvc_man_socio.mapper.SocioMapper;
 import com.robin.msvc_man_socio.repository.ISocioRepo;
@@ -49,6 +50,8 @@ public class SocioServiImple implements ISocioServi{
     @Transactional
     @Override
     public SocioResponse crearSocio(SocioRequest socioRequest) {
+        log.info("[SocioServiImple] - crearSocio: {}", socioRequest);
+        validarDuplicados(socioRequest);
         var socio = this.socioRepo.save(this.socioMapper.toSocio(socioRequest));
         return this.socioMapper.toResponse(socio, port);
     }
@@ -72,10 +75,17 @@ public class SocioServiImple implements ISocioServi{
     }
 
     private void validarDniOrEmailSocio(Socio socio, SocioRequest socioRequest) {
-        if(socio.getDni().equals(socioRequest.dni())){
+        if(!socio.getDni().equals(socioRequest.dni())){
             this.socioRepo.findByDni(socioRequest.dni()).ifPresent(s ->{
                throw new BusinessException("Ya existe otro Socio con el DNI "+socioRequest.dni());
             });
+        }
+    }
+
+    private void validarDuplicados(SocioRequest request) {
+        // Validar DNI duplicado
+        if (socioRepo.findByDni(request.dni()).isPresent()) {
+            throw new SocioDuplicadoException("DNI", request.dni());
         }
     }
 

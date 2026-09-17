@@ -32,13 +32,22 @@ public class SocioController {
 
     @PostMapping
     public ResponseEntity<SocioResponse> crearSocio(@RequestBody @Valid SocioRequest socioRequest) {
+        log.info("[SocioController] - crearSocio: SocioRequest {}", socioRequest);
         return ResponseEntity.ok(socioService.crearSocio(socioRequest));
     }
 
     @PutMapping("/dni/{dni}")
     public ResponseEntity<SocioResponse> actualizarSocio(@PathVariable String dni,
                                                          @RequestBody @Valid SocioRequest socioRequest) {
+        log.info("[SocioController] - actualizarSocio: dni {}", dni);
+        log.info("[SocioController] - actualizarSocio: SocioRequest {}", socioRequest);
         return ResponseEntity.ok(socioService.actualizarSocio(dni, socioRequest));
+    }
+
+    @DeleteMapping("/dni/{dni}")
+    public ResponseEntity<Void> eliminarSocio(@PathVariable String dni) {
+        socioService.eliminarSocio(dni);
+        return ResponseEntity.noContent().build();
     }
 
 }
