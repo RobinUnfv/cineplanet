@@ -116,11 +116,11 @@ services:
       start_period: 20s
 
   # SERVICIO DE MANTENIMIENTO DE SOCIO
-  msvc_man_socio:
+  msvc-man-socio:
     build:
       context: .
       dockerfile: ./msvc_man_socio/Dockerfile
-    container_name: msvc_man_socio
+    container_name: msvc-man-socio
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -129,21 +129,21 @@ services:
       mongodb:
         condition: service_healthy
     ports:
-      - "${MAN_SOCIO_PORT_1}:8092"
+      - "8092:8092"
     environment:
       - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
       - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
-      - PORT_MAN_SOCIO=${MAN_SOCIO_PORT_1}
+      - PORT_MAN_SOCIO=8092
       - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
       - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/dbPartner?authSource=admin
     networks:
       - erp-vpc
 
-  msvc_man_socio2:
+  msvc-man-socio2:
     build:
       context: .
       dockerfile: ./msvc_man_socio/Dockerfile
-    container_name: msvc_man_socio2
+    container_name: msvc-man-socio2
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -152,21 +152,21 @@ services:
       mongodb:
         condition: service_healthy
     ports:
-      - "${MAN_SOCIO_PORT_2}:8092"
+      - "8093:8093"
     environment:
       - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
       - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
-      - PORT_MAN_SOCIO=${MAN_SOCIO_PORT_2}
+      - PORT_MAN_SOCIO=8093
       - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
       - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/dbPartner?authSource=admin
     networks:
       - erp-vpc
 #
-  msvc_man_socio3:
+  msvc-man-socio3:
     build:
       context: .
       dockerfile: ./msvc_man_socio/Dockerfile
-    container_name: msvc_man_socio3
+    container_name: msvc-man-socio3
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -175,15 +175,41 @@ services:
       mongodb:
         condition: service_healthy
     ports:
-      - "${MAN_SOCIO_PORT_3}:8092"
+      - "8094:8094"
     environment:
       - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
       - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
-      - PORT_MAN_SOCIO=${MAN_SOCIO_PORT_3}
+      - PORT_MAN_SOCIO=8094
       - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
       - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/dbPartner?authSource=admin
     networks:
       - erp-vpc
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ./api-gateway/Dockerfile
+    container_name: api-gateway
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "${API_GATEWAY_PORT}:9090"
+    environment:
+      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
+      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
+      - PORT_API_GATEWAY=${API_GATEWAY_PORT}
+      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
+    networks:
+      - erp-vpc
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://api-gateway:9090/actuator/health" ]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+    restart: on-failure
 
 networks:
   erp-vpc:

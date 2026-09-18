@@ -1,6 +1,6 @@
 spring:
   application:
-    name: msvc_man_socio
+    name: msvc-man-socio
   cloud:
     config:
       uri: ${CONFIG_SERVER_CONF_URI:http://localhost:9000}
