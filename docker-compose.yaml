@@ -211,6 +211,31 @@ services:
       retries: 5
     restart: on-failure
 
+  # MySQL - Base de datos de historial
+  mysql-historial:
+    image: mysql
+    container_name: mysql-historial
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${BD_MY_HIST_ROOT}
+      MYSQL_DATABASE: ${BD_MY_HIST_BD}
+      MYSQL_USER: ${BD_MY_HIST_USER}
+      MYSQL_PASSWORD: ${BD_MY_HIST_PASS}
+    ports:
+      - "${BD_MY_HIST_PORT}:3306"
+    volumes:
+      - mysql_historial_data:/var/lib/mysql
+      - ./docker-files/db/mysql-historial:/docker-entrypoint-initdb.d
+    networks:
+      - erp-vpc
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pcjava123" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
 networks:
   erp-vpc:
     driver: bridge
@@ -219,4 +244,6 @@ volumes:
   mysql-cliente-data:
     driver: local
   mongo_data:
+    driver: local
+  mysql_historial_data:
     driver: local
