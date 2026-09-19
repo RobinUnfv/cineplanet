@@ -3,6 +3,7 @@ package com.robin.msvc_historial.controller;
 import com.robin.msvc_historial.dto.HistStsSocioRequest;
 import com.robin.msvc_historial.dto.HistStsSocioResponse;
 import com.robin.msvc_historial.dto.SocioResponse;
+import com.robin.msvc_historial.exception.EstadoIncorrecto;
 import com.robin.msvc_historial.services.IHistStsSocioServi;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,9 @@ public class HistStsSocioContro {
 
         if (histStsSocioRequest.estado().equals(socio.stsSocio())) {
             log.info("El estado del socio con DNI {} ya es {}. No se realizará ninguna actualización.", histStsSocioRequest.dni(), histStsSocioRequest.estado());
-            return ResponseEntity.notFound().build();
+            throw new EstadoIncorrecto("El estado del Socio con DNI "+histStsSocioRequest.dni()+
+                    " ya es "+histStsSocioRequest.estado()+".  No se realizará ninguna actualización.");
+            //return ResponseEntity.status(400).build();
         }
 
         var socioActualizado = this.histStsSocioServi.actualizarSocio(histStsSocioRequest, socio);
@@ -44,7 +47,7 @@ public class HistStsSocioContro {
             return ResponseEntity.status(500).build();
         }
 
-        var historialResponse = this.histStsSocioServi.registrarCambioEstado(histStsSocioRequest, socioActualizado);
+        var historialResponse = this.histStsSocioServi.registrarCambioEstado(histStsSocioRequest, socio);
         log.info("Historial de cambio de estado registrado: {}", historialResponse);
 
         return ResponseEntity.ok(historialResponse);

@@ -1,6 +1,8 @@
 package com.robin.msvc_historial.handler;
 
 import com.robin.msvc_historial.dto.ErrorResp;
+import com.robin.msvc_historial.exception.EstadoIncorrecto;
+import com.robin.msvc_historial.exception.SocioNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,45 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * SocioNotFoundException → 404 NOT FOUND
+     */
+    @ExceptionHandler(SocioNotFoundException.class)
+    public ResponseEntity<ErrorResp> handleSocioNotFound(
+            SocioNotFoundException ex,
+            HttpServletRequest request
+    ) {
+
+        ErrorResp response = ErrorResp.builder()
+                .timestamp(LocalDateTime.now())
+                .status(NOT_FOUND.value())
+                .error("Not Found")
+                .codigo("SOCIO_NOT_FOUND")
+                .mensaje(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(EstadoIncorrecto.class)
+    public ResponseEntity<ErrorResp> handleEstadoIncorrecto(
+            EstadoIncorrecto ex,
+            HttpServletRequest request
+    ) {
+
+        ErrorResp response = ErrorResp.builder()
+                .timestamp(LocalDateTime.now())
+                .status(NOT_FOUND.value())
+                .error("Not Found")
+                .codigo("ESTADO_NOT_VALIDO")
+                .mensaje(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(NOT_FOUND).body(response);
+    }
 
     /**
      * MethodArgumentNotValidException → 400 BAD REQUEST
