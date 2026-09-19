@@ -21,6 +21,7 @@
         <module>msvc-cliente</module>
         <module>msvc_man_socio</module>
         <module>api-gateway</module>
+        <module>msvc-historial</module>
     </modules>
 
     <properties>

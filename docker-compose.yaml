@@ -236,6 +236,32 @@ services:
       start_period: 30s
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
+  # SERVICIO DE HISTORIAL DE CAMBIO DE ESTADO DE SOCIO
+  msvc-historial:
+    build:
+      context: .
+      dockerfile: ./msvc-historial/Dockerfile
+    container_name: msvc-historial
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      mysql-historial:
+        condition: service_healthy
+    ports:
+      - "8095:8095"
+    environment:
+      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
+      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
+      - PORT_MSVC_HIST=8095
+      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
+      - BD_HIST_URL=jdbc:mysql://mysql-historial:${BD_MY_HIST_PORT}/${BD_MY_HIST_BD}
+      - BD_HIST_USERNAME=${BD_MY_HIST_USER}
+      - BD_HIST_PASSWORD=${BD_MY_HIST_PASS}
+    networks:
+      - erp-vpc
+
 networks:
   erp-vpc:
     driver: bridge
