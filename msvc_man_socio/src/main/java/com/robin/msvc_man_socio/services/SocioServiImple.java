@@ -43,7 +43,7 @@ public class SocioServiImple implements ISocioServi{
 
         return this.socioRepo.findByDni(dni)
                 .map(socio -> this.socioMapper.toResponse(socio, port))
-                .orElseThrow( () -> new SocioNotFoundException("El numero de DNI no encontrado : "+dni) );
+                .orElseThrow( () -> new SocioNotFoundException("Socio no encontrado con el numero de DNI : "+dni) );
 
     }
 

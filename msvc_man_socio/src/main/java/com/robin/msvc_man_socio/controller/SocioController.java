@@ -4,6 +4,10 @@ import com.robin.msvc_man_socio.dto.SocioRequest;
 import com.robin.msvc_man_socio.dto.SocioResponse;
 import com.robin.msvc_man_socio.services.ISocioServi;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +30,13 @@ public class SocioController {
     }
 
     @GetMapping("/dni/{dni}")
-    public ResponseEntity<SocioResponse> obtenerSocioDni(@PathVariable String dni) {
+    public ResponseEntity<SocioResponse> obtenerSocioDni(
+            @PathVariable
+            @NotBlank(message = "El DNI no puede estar vacío")
+            @NotNull(message = "El DNI no puede ser nulo")
+            @Pattern(regexp = "^\\d{1,8}$", message = "El DNI debe contener solo números y tener máximo 8 dígitos")
+            @Size(min = 1, max = 8, message = "El DNI debe tener entre 1 y 8 caracteres")
+            String dni) {
        return ResponseEntity.ok(socioService.obtenerSocioPorDni(dni));
     }
 
