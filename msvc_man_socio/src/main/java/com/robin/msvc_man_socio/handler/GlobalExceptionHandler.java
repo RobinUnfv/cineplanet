@@ -5,6 +5,8 @@ import com.robin.msvc_man_socio.exception.BusinessException;
 import com.robin.msvc_man_socio.exception.SocioDuplicadoException;
 import com.robin.msvc_man_socio.exception.SocioNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -22,6 +24,40 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * ConstraintViolationException → 400 BAD REQUEST
+     * Se lanza cuando fallan validaciones en @PathVariable o @RequestParam
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResp> handleConstraintViolation(
+            ConstraintViolationException ex,
+            HttpServletRequest request
+    ) {
+        log.warn("[GlobalExceptionHandler] - ConstraintViolationException: {}", ex.getMessage());
+
+        Map<String, String> errores = new HashMap<>();
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+            // Extrae el nombre del parámetro (ej: "obtenerSocioDni.dni" → "dni")
+            String campo = violation.getPropertyPath().toString();
+            if (campo.contains(".")) {
+                campo = campo.substring(campo.lastIndexOf('.') + 1);
+            }
+            errores.put(campo, violation.getMessage());
+        }
+
+        ErrorResp response = ErrorResp.builder()
+                .timestamp(LocalDateTime.now())
+                .status(BAD_REQUEST.value())
+                .error("Bad Request")
+                .codigo("VALIDATION_ERROR")
+                .mensaje("Error de validación en los parámetros de entrada")
+                .path(request.getRequestURI())
+                .detalles(errores)
+                .build();
+
+        return ResponseEntity.status(BAD_REQUEST).body(response);
+    }
 
     /**
      * SocioNotFoundException → 404 NOT FOUND
