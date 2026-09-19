@@ -162,28 +162,28 @@ services:
     networks:
       - erp-vpc
 #
-  msvc-man-socio3:
-    build:
-      context: .
-      dockerfile: ./msvc_man_socio/Dockerfile
-    container_name: msvc-man-socio3
-    depends_on:
-      discovery-server:
-        condition: service_healthy
-      config-server:
-        condition: service_healthy
-      mongodb:
-        condition: service_healthy
-    ports:
-      - "8094:8094"
-    environment:
-      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
-      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
-      - PORT_MAN_SOCIO=8094
-      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
-      - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/dbPartner?authSource=admin
-    networks:
-      - erp-vpc
+#  msvc-man-socio3:
+#    build:
+#      context: .
+#      dockerfile: ./msvc_man_socio/Dockerfile
+#    container_name: msvc-man-socio3
+#    depends_on:
+#      discovery-server:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      mongodb:
+#        condition: service_healthy
+#    ports:
+#      - "8094:8094"
+#    environment:
+#      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
+#      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
+#      - PORT_MAN_SOCIO=8094
+#      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
+#      - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/dbPartner?authSource=admin
+#    networks:
+#      - erp-vpc
 
   api-gateway:
     build:
@@ -256,7 +256,7 @@ services:
       - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
       - PORT_MSVC_HIST=8095
       - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
-      - BD_HIST_URL=jdbc:mysql://mysql-historial:${BD_MY_HIST_PORT}/${BD_MY_HIST_BD}
+      - BD_HIST_URL=jdbc:mysql://mysql-historial:3306/${BD_MY_HIST_BD}
       - BD_HIST_USERNAME=${BD_MY_HIST_USER}
       - BD_HIST_PASSWORD=${BD_MY_HIST_PASS}
     networks:

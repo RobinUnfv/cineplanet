@@ -1,5 +1,7 @@
 package com.robin.msvc_man_socio.entity;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,10 +54,12 @@ public class Socio {
     private String telefono;
 
     @NotNull(message = "El estado del socio es obligatorio")
+    @Enumerated(EnumType.STRING)
     @Field("sts_socio")
     private Estado stsSocio;
 
     @NotNull(message = "El tipo de membresía es obligatorio")
+    @Enumerated(EnumType.STRING)
     @Field("tipo_membresia")
     private Membresia tipoMembresia;
 

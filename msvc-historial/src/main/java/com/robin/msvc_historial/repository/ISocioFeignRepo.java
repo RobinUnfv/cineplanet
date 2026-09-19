@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
-@FeignClient(name = "msvc-man-socio")
+@FeignClient(name = "msvc-man-socio", path = "/api/socio")
 public interface ISocioFeignRepo {
 
     @GetMapping("/dni/{dni}")

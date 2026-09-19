@@ -2,6 +2,7 @@ package com.robin.msvc_historial.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,11 +32,13 @@ public class HistStsSocio {
     @Column(name = "dni", length = 8, nullable = false)
     private String dni;
 
-    @NotBlank(message = "El estado anterior es obligatorio")
+    @NotNull(message = "El estado anterior es obligatorio")
+    @Enumerated(EnumType.STRING)
     @Column(name = "sts_anterior", length = 8, nullable = true)
     private Estado stsAnterior;
 
-    @NotBlank(message = "El estado actual es obligatorio")
+    @NotNull(message = "El estado actual es obligatorio")
+    @Enumerated(EnumType.STRING)
     @Column(name = "sts_actual", length = 8, nullable = true)
     private Estado stsActual;
 
