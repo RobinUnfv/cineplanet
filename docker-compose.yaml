@@ -323,6 +323,10 @@ services:
       KC_DB_URL_HOST: mysql-keycloak
       KC_DB_URL_PORT: 3306
       KC_DB_SCHEMA: keycloak
+      KC_HOSTNAME: keycloak.local
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
     ports:
       - 8080:8080
     depends_on:
@@ -332,7 +336,7 @@ services:
     networks:
       - erp-vpc
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://keycloak:8080/realms/master" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/realms/master" ]
       interval: 15s
       timeout: 10s
       retries: 10
@@ -354,6 +358,8 @@ services:
         condition: service_healthy
     ports:
       - "9099:9099"
+    extra_hosts:
+      - "keycloak.local:host-gateway"
     environment:
       - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
       - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
