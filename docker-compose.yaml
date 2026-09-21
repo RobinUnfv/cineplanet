@@ -303,6 +303,13 @@ services:
       - mysql_keycloak:/var/lib/mysql
     networks:
       - erp-vpc
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost",
+              "-u", "admin", "-pcjava-pwd", "--silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   keycloak:
     image: quay.io/keycloak/keycloak:19.0.1
@@ -319,10 +326,18 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - mysql-keycloak
+      mysql-keycloak:
+        condition: service_healthy
     command: start-dev
     networks:
       - erp-vpc
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://keycloak:8080/realms/master" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+    restart: on-failure
 
   # SERVICIO DE SEGURIDAD KEYCLOAK
   client-keycloak:

@@ -14,6 +14,6 @@ WORKDIR /app
 
 COPY --from=build /app/client-keycloak/target/*.jar app.jar
 
-EXPOSE 9091
+EXPOSE 9099
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
