@@ -90,54 +90,54 @@ services:
 #      - erp-vpc
 
   # BASE DE DATOS MONGODB
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    restart: always
-    ports:
-      - "${PORT_MONGODB}:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
-    volumes:
-      - mongo_data:/data/db
-      - ./docker-files/db/mongo-init:/docker-entrypoint-initdb.d:ro
-    networks:
-      - erp-vpc
-    healthcheck:
-      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')",
-              "-u", "${MONGO_INITDB_ROOT_USERNAME}",
-              "-p", "${MONGO_INITDB_ROOT_PASSWORD}",
-              "--authenticationDatabase", "admin", "--quiet" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
-
-  # SERVICIO DE MANTENIMIENTO DE SOCIO
-  msvc-man-socio:
-    build:
-      context: .
-      dockerfile: ./msvc_man_socio/Dockerfile
-    container_name: msvc-man-socio
-    depends_on:
-      discovery-server:
-        condition: service_healthy
-      config-server:
-        condition: service_healthy
-      mongodb:
-        condition: service_healthy
-    ports:
-      - "8092:8092"
-    environment:
-      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
-      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
-      - PORT_MAN_SOCIO=8092
-      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
-      - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/dbPartner?authSource=admin
-    networks:
-      - erp-vpc
+#  mongodb:
+#    image: mongo
+#    container_name: mongodb
+#    restart: always
+#    ports:
+#      - "${PORT_MONGODB}:27017"
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+#      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+#      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+#    volumes:
+#      - mongo_data:/data/db
+#      - ./docker-files/db/mongo-init:/docker-entrypoint-initdb.d:ro
+#    networks:
+#      - erp-vpc
+#    healthcheck:
+#      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')",
+#              "-u", "${MONGO_INITDB_ROOT_USERNAME}",
+#              "-p", "${MONGO_INITDB_ROOT_PASSWORD}",
+#              "--authenticationDatabase", "admin", "--quiet" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 20s
+#
+#  # SERVICIO DE MANTENIMIENTO DE SOCIO
+#  msvc-man-socio:
+#    build:
+#      context: .
+#      dockerfile: ./msvc_man_socio/Dockerfile
+#    container_name: msvc-man-socio
+#    depends_on:
+#      discovery-server:
+#        condition: service_healthy
+#      config-server:
+#        condition: service_healthy
+#      mongodb:
+#        condition: service_healthy
+#    ports:
+#      - "8092:8092"
+#    environment:
+#      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
+#      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
+#      - PORT_MAN_SOCIO=8092
+#      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
+#      - BD_MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:${PORT_MONGODB}/dbPartner?authSource=admin
+#    networks:
+#      - erp-vpc
 
 #  msvc-man-socio2:
 #    build:
@@ -321,6 +321,29 @@ services:
     depends_on:
       - mysql-keycloak
     command: start-dev
+    networks:
+      - erp-vpc
+
+  # SERVICIO DE SEGURIDAD KEYCLOAK
+  client-keycloak:
+    build:
+      context: .
+      dockerfile: ./client-keycloak/Dockerfile
+    container_name: client-keycloak
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    ports:
+      - "9099:9099"
+    environment:
+      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
+      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
+      - PORT_CLIENT_KEYCLO=9099
+      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
     networks:
       - erp-vpc
 
