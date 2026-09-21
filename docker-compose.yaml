@@ -288,6 +288,42 @@ services:
 #    networks:
 #      - erp-vpc
 
+  # SEGURIDAD
+  mysql-keycloak:
+    image: mysql
+    container_name: mysql-keycloak
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pwd
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: cjava-pwd
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_keycloak:/var/lib/mysql
+    networks:
+      - erp-vpc
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:19.0.1
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: mysql
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: cjava-pwd
+      KC_DB_URL_HOST: mysql-keycloak
+      KC_DB_URL_PORT: 3306
+      KC_DB_SCHEMA: keycloak
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql-keycloak
+    command: start-dev
+    networks:
+      - erp-vpc
+
 networks:
   erp-vpc:
     driver: bridge
@@ -298,4 +334,6 @@ volumes:
   mongo_data:
     driver: local
   mysql_historial_data:
+    driver: local
+  mysql_keycloak:
     driver: local

@@ -22,6 +22,7 @@
         <module>msvc_man_socio</module>
         <module>api-gateway</module>
         <module>msvc-historial</module>
+        <module>client-keycloak</module>
     </modules>
 
     <properties>
