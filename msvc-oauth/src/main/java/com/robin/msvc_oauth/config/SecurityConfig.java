@@ -149,14 +149,15 @@ public class SecurityConfig {
                 .scope(OidcScopes.PROFILE)
                 .scope("read")
                 .scope("write")
-                .clientSettings(ClientSettings.builder()
+               /* .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(true)   // muestra pantalla de consentimiento
                         .requireProofKey(true)               // PKCE obligatorio
                         .build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofMinutes(30))
                         .refreshTokenTimeToLive(Duration.ofDays(1))
-                        .build())
+                        .build()) */
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
                 .build();
 
         // Cliente máquina-a-máquina (microservicio ↔ microservicio)
