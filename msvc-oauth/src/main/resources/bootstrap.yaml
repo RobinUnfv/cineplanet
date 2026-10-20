@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: msvc-oauth
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_CONF_URI:http://localhost:9000}
+      profile: ${CONFIG_SERVER_PROFILE:dev}
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.robin.cineplanet: WARN
+    org.springframework.security: trace
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  file:
+    name: logs/msvc-oauth.log

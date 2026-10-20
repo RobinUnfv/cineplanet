@@ -23,6 +23,7 @@
         <module>api-gateway</module>
         <module>msvc-historial</module>
         <module>client-keycloak</module>
+        <module>msvc-oauth</module>
     </modules>
 
     <properties>
