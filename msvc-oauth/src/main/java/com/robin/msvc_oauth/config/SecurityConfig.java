@@ -36,13 +36,11 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-import java.time.Duration;
 
 /**
  * Authorization Server (OAuth 2.1 + OpenID Connect) para Spring Boot 4 / Spring Security 7.
@@ -52,7 +50,6 @@ import java.time.Duration;
  *   AHORA:  http.oauth2AuthorizationServer(authorizationServer -> { ... })
  */
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
     // =========================================================================
@@ -94,6 +91,7 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()   // útil para Eureka / Docker
                         .anyRequest().authenticated()
                 )
+                .csrf(csrf -> csrf.disable())
                 .formLogin(Customizer.withDefaults());
 
         return http.build();
@@ -142,7 +140,7 @@ public class SecurityConfig {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:9090/login/oauth2/code/gateway-app")
+                .redirectUri("http://127.0.0.1:9090/login/oauth2/code/client-app")
                 .redirectUri("http://127.0.0.1:9090/authorized")  // para pruebas con Postman
                 .postLogoutRedirectUri("http://127.0.0.1:9090/logout")
                 .scope(OidcScopes.OPENID)
