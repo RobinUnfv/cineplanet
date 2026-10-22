@@ -114,8 +114,8 @@ services:
 #      timeout: 5s
 #      retries: 5
 #      start_period: 20s
-#
-#  # SERVICIO DE MANTENIMIENTO DE SOCIO
+
+  # SERVICIO DE MANTENIMIENTO DE SOCIO
 #  msvc-man-socio:
 #    build:
 #      context: .
@@ -235,8 +235,8 @@ services:
 #      retries: 10
 #      start_period: 30s
 #    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-
-  # SERVICIO DE HISTORIAL DE CAMBIO DE ESTADO DE SOCIO
+#
+#  # SERVICIO DE HISTORIAL DE CAMBIO DE ESTADO DE SOCIO
 #  msvc-historial:
 #    build:
 #      context: .
@@ -368,6 +368,32 @@ services:
 #    networks:
 #      - erp-vpc
 
+  # SERVICIO DE HISTORIAL DE CAMBIO DE ESTADO DE SOCIO
+  msvc-oauth:
+    build:
+      context: .
+      dockerfile: ./msvc-oauth/Dockerfile
+    container_name: msvc-oauth
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    ports:
+      - "9100:9100"
+    environment:
+      - CONFIG_SERVER_CONF_URI=http://${CONFI_SERVER_HOST}:${CONFI_SERVER_PORT}
+      - CONFIG_SERVER_PROFILE=${CONFI_SERVER_PROFILE}
+      - PORT_MSVC_OAUTH=9100
+      - EUREKA_CLIENT_SERVICE_URL=http://${DISCOVERY_SERVICE_HOST}:${DISCOVERY_SERVICE_PORT}/eureka
+    networks:
+      - erp-vpc
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://msvc-oauth:9100/actuator/health" ]
+      interval: 15s
+      timeout: 3s
+      retries: 10
+
 networks:
   erp-vpc:
     driver: bridge
@@ -379,5 +405,5 @@ volumes:
     driver: local
   mysql_historial_data:
     driver: local
-  mysql_keycloak:
-    driver: local
+#  mysql_keycloak:
+#    driver: local
