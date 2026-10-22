@@ -111,15 +111,15 @@ public class SecurityConfig {
     // =========================================================================
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails user = User.withUsername("user")
+        UserDetails user = User.withUsername("robin")
                 //.password(passwordEncoder.encode("password"))
-                .password("password: {noop}12345")  // para pruebas rápidas, sin encriptar
+                .password("{noop}12345")  // para pruebas rápidas, sin encriptar
                 .roles("USER")
                 .build();
 
         UserDetails admin = User.withUsername("admin")
                 //.password(passwordEncoder.encode("admin123"))
-                .password("password: {noop}admin123")  // para pruebas rápidas, sin encriptar
+                .password("{noop}admin123")  // para pruebas rápidas, sin encriptar
                 .roles("USER", "ADMIN")
                 .build();
 
